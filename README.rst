@@ -20,7 +20,7 @@ Install poetry2conda by running:
 
 .. code-block:: console
 
-    pip install poetry2conda
+    $ pip install poetry2conda
 
 Usage
 -----
@@ -42,7 +42,9 @@ Then, use the command line to create a conda environment file:
 
 .. code-block:: console
 
-    poetry2conda pyproject.toml environment.yaml
+    $ poetry2conda pyproject.toml environment.yaml
+    # or if you want to see the contents but not write the file:
+    $ poetry2conda pyproject.toml -
 
 This will create a yaml file like:
 
