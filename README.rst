@@ -8,7 +8,7 @@ environment.
 Features
 --------
 
-- Set conda channels.
+- Set conda channels for each dependency.
 - Rename conda dependencies.
 - Convert tilde and caret dependencies to regular version specifiers.
 - Handle pure pip dependencies.
@@ -20,7 +20,7 @@ Install poetry2conda by running:
 
 .. code-block:: console
 
-  pip install poetry2conda
+    pip install poetry2conda
 
 Usage
 -----
@@ -33,7 +33,7 @@ pyproject.toml:
 
     [tool.poetry.dependencies]
     foo = "^1.2.3"
-    ...
+    # ...
 
     [tool.poetry2conda]
     name = "some-name-env"
@@ -51,7 +51,7 @@ This will create a yaml file like:
     name: some-name-env
     dependencies:
       - foo>=1.2.3,<2.0.0
-      ...
+      # ...
 
 Sometimes, a dependency is handled differently on conda. For this case,
 the section ``tool.poetry2conda.dependencies`` can be used to inform on specific
@@ -65,7 +65,7 @@ conda-forge, declare it as follows:
 
     [tool.poetry.dependencies]
     foo = "^1.2.3"
-    ...
+    # ...
 
     [tool.poetry2conda]
     name = "my-env-with-channels"
@@ -80,7 +80,7 @@ After conversion, the yaml file will look like:
     name: my-env-with-channels
     dependencies:
       - conda-forge::foo>=1.2.3,<2.0.0
-      ...
+      # ...
 
 Sometimes, a package on PyPI does not have the same name on conda
 (why? why not? confusion!). For example, ``tables`` and ``pytables``,
@@ -91,7 +91,7 @@ environment file, you can set it as:
 
     [tool.poetry.dependencies]
     docker = "^4.2.0"
-    ...
+    # ...
 
     [tool.poetry2conda]
     name = "another-example"
@@ -106,7 +106,7 @@ The converted yaml file will look like:
     name: another-example
     dependencies:
       - docker-py>=4.2.0,<5.0.0
-      ...
+      # ...
 
 When a package does not exist on conda, declare it on the pip channel:
 
@@ -115,7 +115,7 @@ When a package does not exist on conda, declare it on the pip channel:
 
     [tool.poetry.dependencies]
     quetzal-client = "^0.5.2"
-    ...
+    # ...
 
     [tool.poetry2conda]
     name = "example-with-pip"
@@ -142,7 +142,7 @@ dependencies:
 
     [tool.poetry.dependencies]
     my_private_lib = { git = "https://github.com/company/repo.git", tag = "v1.2.3" }
-    ...
+    # ...
 
     [tool.poetry2conda]
     name = "example-with-git"
@@ -207,7 +207,7 @@ should be managed. ``requirements.txt`` were replaced (in theory) by
 environments, such as Pipenv and poetry, tackling even more problems such as
 virtual environments, Python versions, and many other distribution problems.
 
-Dependencies, environemnts, package managers... this confused a lot of people
+Dependencies, environemnts, package managers# ... this confused a lot of people
 (including me).
 
 Eventually, I decided to give the
@@ -219,7 +219,7 @@ I abandoned many times but always came back because at least it helps me
 define my dependencies in only file. After two or three tries, I decided to
 migrate my code base to poetry and drop the requirement and setup files.
 
-But wait...
+But wait# ...
 
 To add a bit of entropy to the Python situation, a company called Continuum
 Analytics (later renamed Anaconda) created a *different* Python distribution a
@@ -253,7 +253,7 @@ I eventually managed to do it, but I have PTSD.
 
 So to summarize, I am not convinced by Anaconda, buy I have colleagues or
 collaborators that do use it. I don't understand why (yes, apparently tensorflow
-is faster with anaconda, sigh...). But I have to admit that conda is not going
+is faster with anaconda, sigh# ...). But I have to admit that conda is not going
 to go anywhere.
 
 This leaves me in an uncomfortable situation: I want to use poetry, but I don't
