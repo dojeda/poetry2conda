@@ -210,7 +210,7 @@ should be managed. ``requirements.txt`` were replaced (in theory) by
 environments, such as Pipenv and poetry, tackling even more problems such as
 virtual environments, Python versions, and many other distribution problems.
 
-Dependencies, environemnts, package managers# ... this confused a lot of people
+Dependencies, environemnts, package managers... this confused a lot of people
 (including me).
 
 Eventually, I decided to give the
@@ -222,7 +222,7 @@ I abandoned many times but always came back because at least it helps me
 define my dependencies in only file. After two or three tries, I decided to
 migrate my code base to poetry and drop the requirement and setup files.
 
-But wait# ...
+But wait...
 
 To add a bit of entropy to the Python situation, a company called Continuum
 Analytics (later renamed Anaconda) created a *different* Python distribution a
@@ -256,7 +256,7 @@ I eventually managed to do it, but I have PTSD.
 
 So to summarize, I am not convinced by Anaconda, buy I have colleagues or
 collaborators that do use it. I don't understand why (yes, apparently tensorflow
-is faster with anaconda, sigh# ...). But I have to admit that conda is not going
+is faster with anaconda, sigh...). But I have to admit that conda is not going
 to go anywhere.
 
 This leaves me in an uncomfortable situation: I want to use poetry, but I don't
