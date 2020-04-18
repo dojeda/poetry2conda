@@ -2,8 +2,17 @@
 poetry2conda
 ============
 
+.. image:: https://img.shields.io/pypi/v/poetry2conda.svg
+    :target: https://pypi.org/project/poetry2conda/
+.. image:: https://img.shields.io/pypi/l/poetry2conda.svg
+    :target: https://pypi.org/project/poetry2conda/
+
 A script to convert a Python project declared on a pyproject.toml to a conda
 environment.
+
+This is not an attempt to move away from pyproject.toml to conda. It is a tool
+to help teams maintain a single file for dependencies when there are
+collaborators that prefer regular Python/PyPI and others that prefer conda.
 
 Features
 --------
@@ -18,7 +27,7 @@ Installation
 
 You will be able to install poetry2conda by running:
 
-.. code-block:: console
+.. code-block:: bash
 
     $ pip install poetry2conda
 
@@ -40,9 +49,10 @@ pyproject.toml:
 
 Then, use the command line to create a conda environment file:
 
-.. code-block:: console
+.. code-block:: bash
 
     $ poetry2conda pyproject.toml environment.yaml
+
     # or if you want to see the contents but not write the file:
     $ poetry2conda pyproject.toml -
 
