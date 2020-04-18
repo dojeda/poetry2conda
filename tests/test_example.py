@@ -1,6 +1,5 @@
 import io
 
-import pytest
 import yaml
 
 from poetry2conda.convert import main
@@ -59,17 +58,17 @@ dependencies:
 
 
 def test_sample(tmpdir, mocker):
-    toml_file = tmpdir / 'pyproject.toml'
-    yaml_file = tmpdir / 'environment.yaml'
+    toml_file = tmpdir / "pyproject.toml"
+    yaml_file = tmpdir / "environment.yaml"
 
-    with toml_file.open('w') as fd:
+    with toml_file.open("w") as fd:
         fd.write(SAMPLE_TOML)
     expected = yaml.safe_load(io.StringIO(SAMPLE_YAML))
 
-    mocker.patch('sys.argv', ['poetry2conda', str(toml_file), str(yaml_file)])
+    mocker.patch("sys.argv", ["poetry2conda", str(toml_file), str(yaml_file)])
     main()
 
-    with yaml_file.open('r') as fd:
+    with yaml_file.open("r") as fd:
         result = yaml.safe_load(fd)
 
     assert result == expected
