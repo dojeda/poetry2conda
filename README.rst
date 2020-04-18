@@ -17,7 +17,6 @@ Installation
 ------------
 
 You will be able to install poetry2conda by running:
-(but not yet, I have not yet published to PyPI).
 
 .. code-block:: console
 
