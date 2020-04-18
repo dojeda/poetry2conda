@@ -4,6 +4,21 @@ version = "0.1.0"
 description = "Convert pyproject.toml to environment.yaml"
 authors = ["David Ojeda <david.ojeda@gmail.com>"]
 license = "MIT"
+readme = "README.rst"
+homepage = "https://github.com/dojeda/poetry2conda"
+repository = "https://github.com/dojeda/poetry2conda"
+keywords = ["poetry", "anaconda"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3 :: Only",
+]
+include = [
+    "LICENSE"
+]
 
 [tool.poetry.dependencies]
 python = "^3.6"
@@ -16,6 +31,7 @@ pyyaml = "^5.3.1"
 pytest-mock = "^3.0.0"
 coverage = "^5.1"
 pytest-cov = "^2.8.1"
+black = "^19.10b0"
 
 [tool.poetry.scripts]
 poetry2conda = "poetry2conda.convert:main"
