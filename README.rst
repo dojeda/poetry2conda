@@ -169,6 +169,27 @@ This is handled like a pure pip dependency:
       - pip:
         - git+https://github.com/company/repo.git@v1.2.3#egg=my_private_lib
 
+Packages with extras are supported on a pyproject.toml, but conda does not
+support extras. For the moment, this information is dropped:
+
+.. code-block:: toml
+
+
+    [tool.poetry.dependencies]
+    dask = { extras = ["bag"], version = "^2.15.0" }
+    # ...
+
+    [tool.poetry2conda]
+    name = "example-with-extras"
+
+Which will be translated to:
+
+.. code-block:: yaml
+
+    name: example-with-extras
+    dependencies:
+      - dask>=2.15.0,<3.0.0
+
 
 Contribute
 ----------
