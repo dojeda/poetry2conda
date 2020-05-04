@@ -24,6 +24,7 @@ quux = "2.34.5"             # Example of an exact version
 quuz = ">=3.2"              # Example of an inequality
 xyzzy = ">=2.1,<4.2"        # Example of two inequalities
 grault = { git = "https://github.com/organization/repo.git", tag = "v2.7.4"}   # Example of a git package
+pizza = {extras = ["pepperoni"], version = "^1.2.3"}  # Example of a package with extra requirements
 
 [tool.poetry2conda]
 name = "bibimbap-env"
@@ -50,6 +51,7 @@ dependencies:
   - quux==2.34.5
   - quuz>=3.2.0
   - xyzzy>=2.1.0,<4.2.0
+  - pizza>=1.2.3,<2.0.0    # Note that extra requirements are not supported on conda :-(
   - pip
   - pip:
     - baz>=0.4.5,<0.5.0
