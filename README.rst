@@ -190,6 +190,31 @@ Which will be translated to:
     dependencies:
       - dask>=2.15.0,<3.0.0
 
+Sometimes (very rarely) a package is not available on PyPI but conda does have
+a it. Poetry can handle this with a git dependency and poetry2conda can keep
+these as pip installable packages. But if you prefer to transform it to its
+conda package, use the following configuration:
+
+.. code-block:: toml
+
+    [tool.poetry.dependencies]
+    weird = { git = "https://github.com/org/weird.git", tag = "v2.3" }
+
+    [tool.poetry2conda]
+    name = "strange-example"
+
+    [tool.poetry2conda.dependencies]
+    weird = { name = "bob", channel = "conda-forge", version = "^2.3" }  # You need to declare the version here
+
+Which will be translated to:
+
+.. code-block:: yaml
+
+    name: strange-example
+    dependencies:
+      - conda-forge::bob>=2.3.0,<3.0.0
+
+
 
 Contribute
 ----------

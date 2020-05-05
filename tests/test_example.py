@@ -25,6 +25,7 @@ quuz = ">=3.2"              # Example of an inequality
 xyzzy = ">=2.1,<4.2"        # Example of two inequalities
 grault = { git = "https://github.com/organization/repo.git", tag = "v2.7.4"}   # Example of a git package
 pizza = {extras = ["pepperoni"], version = "^1.2.3"}  # Example of a package with extra requirements
+chameleon = { git = "https://github.com/org/repo.git", tag = "v2.3" }
 
 [tool.poetry2conda]
 name = "bibimbap-env"
@@ -33,6 +34,7 @@ name = "bibimbap-env"
 bar = { channel = "conda-forge" }            # Example of a package on conda-forge
 baz = { channel = "pip" }                    # Example of a pure pip package
 qux = { name = "thud" }                      # Example of a package that changes names in conda
+chameleon = { name = "lizard", channel = "animals", version = "^2.5.4" }  # Example of a package that changes from git to regular conda
 
 [build-system]
 requires = ["poetry>=0.12"]
@@ -52,6 +54,7 @@ dependencies:
   - quuz>=3.2.0
   - xyzzy>=2.1.0,<4.2.0
   - pizza>=1.2.3,<2.0.0    # Note that extra requirements are not supported on conda :-(
+  - animals::lizard>=2.5.4,<3.0.0
   - pip
   - pip:
     - baz>=0.4.5,<0.5.0

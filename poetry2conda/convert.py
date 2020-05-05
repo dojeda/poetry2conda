@@ -120,6 +120,13 @@ def collect_dependencies(
     """
     dependencies = {}
     pip_dependencies = {}
+
+    # 1. Do a first pass to change pip to conda packages
+    for name, conda_dict in conda_constraints.items():
+        if name in poetry_dependencies and 'git' in poetry_dependencies[name]:
+            poetry_dependencies[name] = conda_dict['version']
+
+    # 2. Now do the conversion
     for name, constraint in poetry_dependencies.items():
         if isinstance(constraint, str):
             dependencies[name] = convert_version(constraint)
