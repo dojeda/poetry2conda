@@ -26,6 +26,7 @@ xyzzy = ">=2.1,<4.2"        # Example of two inequalities
 grault = { git = "https://github.com/organization/repo.git", tag = "v2.7.4"}   # Example of a git package
 pizza = {extras = ["pepperoni"], version = "^1.2.3"}  # Example of a package with extra requirements
 chameleon = { git = "https://github.com/org/repo.git", tag = "v2.3" }
+pudding = { version = "^1.0", optional = true }
 
 [tool.poetry.dev-dependencies]
 fork = "^1.2"

@@ -135,6 +135,8 @@ def collect_dependencies(
         if isinstance(constraint, str):
             dependencies[name] = convert_version(constraint)
         elif isinstance(constraint, dict):
+            if constraint.get('optional', False):
+                continue
             if "git" in constraint:
                 git = constraint["git"]
                 tag = constraint["tag"]
