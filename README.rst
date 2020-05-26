@@ -65,6 +65,13 @@ This will create a yaml file like:
       - foo>=1.2.3,<2.0.0
       # ...
 
+If you want to include extras in the created environment, you can use
+the `--extra` or `-E` arguments. They can be used multiple times to
+specify multiple extras
+
+If you also want to include development dependencies, the `--dev`
+argument will do that.
+
 Sometimes, a dependency is handled differently on conda. For this case,
 the section ``tool.poetry2conda.dependencies`` can be used to inform on specific
 channels, or package names.
@@ -213,12 +220,6 @@ Which will be translated to:
     name: strange-example
     dependencies:
       - conda-forge::bob>=2.3.0,<3.0.0
-
-
-If you want to include the dev-dependencies in the generated conda
-environment file, you can pass the `--dev` option to poetry2conda.  All
-the caveats and conversion patches that are described above apply to
-dev dependencies all the same.
 
 
 Contribute
