@@ -132,7 +132,9 @@ def test_sample_extra(tmpdir, mocker):
         fd.write(SAMPLE_TOML)
     expected = yaml.safe_load(io.StringIO(SAMPLE_YAML_EXTRA))
 
-    mocker.patch("sys.argv", ["poetry2conda", str(toml_file), str(yaml_file), "-E", "dessert"])
+    mocker.patch(
+        "sys.argv", ["poetry2conda", str(toml_file), str(yaml_file), "-E", "dessert"]
+    )
     main()
 
     with yaml_file.open("r") as fd:
@@ -149,8 +151,7 @@ def test_sample_dev(tmpdir, mocker):
         fd.write(SAMPLE_TOML)
     expected = yaml.safe_load(io.StringIO(SAMPLE_YAML_DEV))
 
-    mocker.patch("sys.argv", ["poetry2conda", str(toml_file), str(yaml_file),
-                              '--dev'])
+    mocker.patch("sys.argv", ["poetry2conda", str(toml_file), str(yaml_file), "--dev"])
     main()
 
     with yaml_file.open("r") as fd:

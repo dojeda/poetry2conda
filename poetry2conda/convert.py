@@ -32,14 +32,14 @@ def convert(file: TextIO, include_dev=False, extras=None) -> str:
     env_name = poetry2conda_config["name"]
     poetry_dependencies = poetry_config.get("dependencies", {})
     if include_dev:
-        poetry_dependencies.update(poetry_config.get('dev-dependencies', {}))
-    poetry_extras = poetry_config.get('extras', {})
+        poetry_dependencies.update(poetry_config.get("dev-dependencies", {}))
+    poetry_extras = poetry_config.get("extras", {})
     # We mark the items listed in the selected extras as non-optional
     for extra in extras:
         for item in poetry_extras[extra]:
             dep = poetry_dependencies[item]
             if isinstance(dep, dict):
-                dep['optional'] = False
+                dep["optional"] = False
     conda_constraints = poetry2conda_config.get("dependencies", {})
 
     dependencies, pip_dependencies = collect_dependencies(
@@ -136,22 +136,22 @@ def collect_dependencies(
 
     # 1. Do a first pass to change pip to conda packages
     for name, conda_dict in conda_constraints.items():
-        if name in poetry_dependencies and 'git' in poetry_dependencies[name]:
-            poetry_dependencies[name] = conda_dict['version']
+        if name in poetry_dependencies and "git" in poetry_dependencies[name]:
+            poetry_dependencies[name] = conda_dict["version"]
 
     # 2. Now do the conversion
     for name, constraint in poetry_dependencies.items():
         if isinstance(constraint, str):
             dependencies[name] = convert_version(constraint)
         elif isinstance(constraint, dict):
-            if constraint.get('optional', False):
+            if constraint.get("optional", False):
                 continue
             if "git" in constraint:
                 git = constraint["git"]
                 tag = constraint["tag"]
                 pip_dependencies[f"git+{git}@{tag}#egg={name}"] = None
-            elif 'version' in constraint:
-                dependencies[name] = convert_version(constraint['version'])
+            elif "version" in constraint:
+                dependencies[name] = convert_version(constraint["version"])
             else:
                 raise ValueError(
                     f"This converter only supports normal dependencies and "
@@ -258,22 +258,18 @@ def main():
         help="environment.yaml output file.",
     )
     parser.add_argument(
-        "--dev",
-        action="store_true",
-        help="include dev dependencies",
+        "--dev", action="store_true", help="include dev dependencies",
     )
     parser.add_argument(
-        "--extras", "-E",
-        action='append',
-        help="Add extra requirements",
+        "--extras", "-E", action="append", help="Add extra requirements",
     )
     parser.add_argument(
         "--version", action="version", version=f"%(prog)s (version {__version__})"
     )
     args = parser.parse_args()
-    args.environment.write(convert(args.pyproject,
-                                   include_dev=args.dev,
-                                   extras=args.extras))
+    args.environment.write(
+        convert(args.pyproject, include_dev=args.dev, extras=args.extras)
+    )
 
 
 if __name__ == "__main__":
