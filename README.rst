@@ -191,7 +191,7 @@ Which will be translated to:
       - dask>=2.15.0,<3.0.0
 
 Sometimes (very rarely) a package is not available on PyPI but conda does have
-a it. Poetry can handle this with a git dependency and poetry2conda can keep
+it. Poetry can handle this with a git dependency and poetry2conda can keep
 these as pip installable packages. But if you prefer to transform it to its
 conda package, use the following configuration:
 
@@ -280,8 +280,8 @@ migrate my code base to poetry and drop the requirement and setup files.
 But wait...
 
 To add a bit of entropy to the Python situation, a company called Continuum
-Analytics (later renamed Anaconda) created a *different* Python distribution a
-nd package management, Anaconda (and its less obese brother, Miniconda).
+Analytics (later renamed Anaconda) created a *different* Python distribution 
+and package management, Anaconda (and its less obese brother, Miniconda).
 I think they were tired of the current Python situation, and they were right.
 They replaced all of the virtual environment problems with their own
 environments and they distribute their own packages without using the current
