@@ -8,7 +8,7 @@ import toml
 from poetry2conda import __version__
 
 
-def convert(file: TextIO) -> str:
+def convert(file: TextIO, include_dev=False) -> str:
     """ Convert a pyproject.toml file to a conda environment YAML
 
     This is the main function of poetry2conda, where all parsing, converting,
@@ -18,6 +18,8 @@ def convert(file: TextIO) -> str:
     ----------
     file
         A file-like object containing a pyproject.toml file.
+    include_dev
+        Whether to include the dev dependencies in the resulting environment
 
     Returns
     -------
@@ -27,6 +29,8 @@ def convert(file: TextIO) -> str:
     poetry2conda_config, poetry_config = parse_pyproject_toml(file)
     env_name = poetry2conda_config["name"]
     poetry_dependencies = poetry_config.get("dependencies", {})
+    if include_dev:
+        poetry_dependencies.update(poetry_config.get('dev-dependencies', {}))
     conda_constraints = poetry2conda_config.get("dependencies", {})
 
     dependencies, pip_dependencies = collect_dependencies(
@@ -243,10 +247,15 @@ def main():
         help="environment.yaml output file.",
     )
     parser.add_argument(
+        "--dev",
+        action="store_true",
+        help="include dev dependencies",
+    )
+    parser.add_argument(
         "--version", action="version", version=f"%(prog)s (version {__version__})"
     )
     args = parser.parse_args()
-    args.environment.write(convert(args.pyproject))
+    args.environment.write(convert(args.pyproject, include_dev=args.dev))
 
 
 if __name__ == "__main__":

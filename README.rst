@@ -215,6 +215,11 @@ Which will be translated to:
       - conda-forge::bob>=2.3.0,<3.0.0
 
 
+If you want to include the dev-dependencies in the generated conda
+environment file, you can pass the `--dev` option to poetry2conda.  All
+the caveats and conversion patches that are described above apply to
+dev dependencies all the same.
+
 
 Contribute
 ----------

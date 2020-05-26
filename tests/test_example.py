@@ -27,6 +27,9 @@ grault = { git = "https://github.com/organization/repo.git", tag = "v2.7.4"}   #
 pizza = {extras = ["pepperoni"], version = "^1.2.3"}  # Example of a package with extra requirements
 chameleon = { git = "https://github.com/org/repo.git", tag = "v2.3" }
 
+[tool.poetry.dev-dependencies]
+fork = "^1.2"
+
 [tool.poetry2conda]
 name = "bibimbap-env"
 
@@ -61,6 +64,25 @@ dependencies:
     - git+https://github.com/organization/repo.git@v2.7.4#egg=grault
 """
 
+SAMPLE_YAML_DEV = """\
+name: bibimbap-env
+dependencies:
+  - python>=3.7.0,<4.0.0
+  - foo>=0.2.3,<0.3.0
+  - conda-forge::bar>=1.2.3,<2.0.0
+  - thud>=1.4.5,<1.5.0
+  - quux==2.34.5
+  - quuz>=3.2.0
+  - xyzzy>=2.1.0,<4.2.0
+  - pizza>=1.2.3,<2.0.0    # Note that extra requirements are not supported on conda :-(
+  - animals::lizard>=2.5.4,<3.0.0
+  - fork>=1.2.0,<2.0.0
+  - pip
+  - pip:
+    - baz>=0.4.5,<0.5.0
+    - git+https://github.com/organization/repo.git@v2.7.4#egg=grault
+"""
+
 
 def test_sample(tmpdir, mocker):
     toml_file = tmpdir / "pyproject.toml"
@@ -71,6 +93,24 @@ def test_sample(tmpdir, mocker):
     expected = yaml.safe_load(io.StringIO(SAMPLE_YAML))
 
     mocker.patch("sys.argv", ["poetry2conda", str(toml_file), str(yaml_file)])
+    main()
+
+    with yaml_file.open("r") as fd:
+        result = yaml.safe_load(fd)
+
+    assert result == expected
+
+
+def test_sample_dev(tmpdir, mocker):
+    toml_file = tmpdir / "pyproject.toml"
+    yaml_file = tmpdir / "environment.yaml"
+
+    with toml_file.open("w") as fd:
+        fd.write(SAMPLE_TOML)
+    expected = yaml.safe_load(io.StringIO(SAMPLE_YAML_DEV))
+
+    mocker.patch("sys.argv", ["poetry2conda", str(toml_file), str(yaml_file),
+                              '--dev'])
     main()
 
     with yaml_file.open("r") as fd:
