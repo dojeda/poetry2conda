@@ -8,7 +8,7 @@ import toml
 from poetry2conda import __version__
 
 
-def convert(file: TextIO, include_dev=False) -> str:
+def convert(file: TextIO, include_dev=False, extras=None) -> str:
     """ Convert a pyproject.toml file to a conda environment YAML
 
     This is the main function of poetry2conda, where all parsing, converting,
@@ -26,11 +26,20 @@ def convert(file: TextIO, include_dev=False) -> str:
     The contents of an environment.yaml file as a string.
 
     """
+    if extras is None:
+        extras = []
     poetry2conda_config, poetry_config = parse_pyproject_toml(file)
     env_name = poetry2conda_config["name"]
     poetry_dependencies = poetry_config.get("dependencies", {})
     if include_dev:
         poetry_dependencies.update(poetry_config.get('dev-dependencies', {}))
+    poetry_extras = poetry_config.get('extras', {})
+    # We mark the items listed in the selected extras as non-optional
+    for extra in extras:
+        for item in poetry_extras[extra]:
+            dep = poetry_dependencies[item]
+            if isinstance(dep, dict):
+                dep['optional'] = False
     conda_constraints = poetry2conda_config.get("dependencies", {})
 
     dependencies, pip_dependencies = collect_dependencies(
@@ -254,10 +263,17 @@ def main():
         help="include dev dependencies",
     )
     parser.add_argument(
+        "--extras", "-E",
+        action='append',
+        help="Add extra requirements",
+    )
+    parser.add_argument(
         "--version", action="version", version=f"%(prog)s (version {__version__})"
     )
     args = parser.parse_args()
-    args.environment.write(convert(args.pyproject, include_dev=args.dev))
+    args.environment.write(convert(args.pyproject,
+                                   include_dev=args.dev,
+                                   extras=args.extras))
 
 
 if __name__ == "__main__":
