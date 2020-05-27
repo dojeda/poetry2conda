@@ -2,7 +2,7 @@ import argparse
 from datetime import datetime
 from typing import Mapping, TextIO, Tuple
 
-import semantic_version
+import semver
 import toml
 
 from poetry2conda import __version__
@@ -44,7 +44,7 @@ def convert_version(spec_str: str) -> str:
     """ Convert a poetry version spec to a conda-compatible version spec.
 
     Poetry accepts tilde and caret version specs, but conda does not support
-    them. This function uses the `semantic_version` package to parse it and
+    them. This function uses the `poetry-semver` package to parse it and
     transform it to regular version spec ranges.
 
     Parameters
@@ -57,11 +57,13 @@ def convert_version(spec_str: str) -> str:
     The same version specification without tilde or caret.
 
     """
-    spec = semantic_version.SimpleSpec.parse(spec_str)
-    if isinstance(spec.clause, semantic_version.base.AllOf):
-        converted = ",".join(sorted(map(str, spec.clause.clauses), reverse=True))
-    else:
-        converted = str(spec.clause)
+    spec = semver.parse_constraint(spec_str)
+    if isinstance(spec, semver.Version):
+        converted = f"=={str(spec)}"
+    elif isinstance(spec, semver.VersionRange):
+        converted = str(spec)
+    elif isinstance(spec, semver.VersionUnion):
+        raise ValueError("Complex version constraints are not supported at the moment.")
     return converted
 
 

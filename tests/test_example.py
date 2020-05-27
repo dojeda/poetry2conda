@@ -49,13 +49,13 @@ build-backend = "poetry.masonry.api"
 SAMPLE_YAML = """\
 name: bibimbap-env
 dependencies:
-  - python>=3.7.0,<4.0.0
+  - python>=3.7,<4.0
   - foo>=0.2.3,<0.3.0
   - conda-forge::bar>=1.2.3,<2.0.0
   - thud>=1.4.5,<1.5.0
   - quux==2.34.5
-  - quuz>=3.2.0
-  - xyzzy>=2.1.0,<4.2.0
+  - quuz>=3.2
+  - xyzzy>=2.1,<4.2
   - pizza>=1.2.3,<2.0.0    # Note that extra requirements are not supported on conda :-(
   - animals::lizard>=2.5.4,<3.0.0
   - pip
@@ -67,16 +67,16 @@ dependencies:
 SAMPLE_YAML_DEV = """\
 name: bibimbap-env
 dependencies:
-  - python>=3.7.0,<4.0.0
+  - python>=3.7,<4.0
   - foo>=0.2.3,<0.3.0
   - conda-forge::bar>=1.2.3,<2.0.0
   - thud>=1.4.5,<1.5.0
   - quux==2.34.5
-  - quuz>=3.2.0
-  - xyzzy>=2.1.0,<4.2.0
+  - quuz>=3.2
+  - xyzzy>=2.1,<4.2
   - pizza>=1.2.3,<2.0.0    # Note that extra requirements are not supported on conda :-(
   - animals::lizard>=2.5.4,<3.0.0
-  - fork>=1.2.0,<2.0.0
+  - fork>=1.2,<2.0
   - pip
   - pip:
     - baz>=0.4.5,<0.5.0
