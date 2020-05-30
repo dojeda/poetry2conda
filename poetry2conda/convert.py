@@ -1,6 +1,6 @@
 import argparse
 from datetime import datetime
-from typing import Mapping, TextIO, Tuple
+from typing import Mapping, TextIO, Tuple, Iterable, Optional
 
 import semver
 import toml
@@ -8,7 +8,9 @@ import toml
 from poetry2conda import __version__
 
 
-def convert(file: TextIO, include_dev=False) -> str:
+def convert(
+    file: TextIO, include_dev: bool = False, extras: Optional[Iterable[str]] = None
+) -> str:
     """ Convert a pyproject.toml file to a conda environment YAML
 
     This is the main function of poetry2conda, where all parsing, converting,
@@ -19,18 +21,30 @@ def convert(file: TextIO, include_dev=False) -> str:
     file
         A file-like object containing a pyproject.toml file.
     include_dev
-        Whether to include the dev dependencies in the resulting environment
+        Whether to include the dev dependencies in the resulting environment.
+    extras
+        The name of extras to include in the output.  Can be None or empty
+        for no extras.
 
     Returns
     -------
     The contents of an environment.yaml file as a string.
 
     """
+    if extras is None:
+        extras = []
     poetry2conda_config, poetry_config = parse_pyproject_toml(file)
     env_name = poetry2conda_config["name"]
     poetry_dependencies = poetry_config.get("dependencies", {})
     if include_dev:
-        poetry_dependencies.update(poetry_config.get('dev-dependencies', {}))
+        poetry_dependencies.update(poetry_config.get("dev-dependencies", {}))
+    poetry_extras = poetry_config.get("extras", {})
+    # We mark the items listed in the selected extras as non-optional
+    for extra in extras:
+        for item in poetry_extras[extra]:
+            dep = poetry_dependencies[item]
+            if isinstance(dep, dict):
+                dep["optional"] = False
     conda_constraints = poetry2conda_config.get("dependencies", {})
 
     dependencies, pip_dependencies = collect_dependencies(
@@ -129,20 +143,22 @@ def collect_dependencies(
 
     # 1. Do a first pass to change pip to conda packages
     for name, conda_dict in conda_constraints.items():
-        if name in poetry_dependencies and 'git' in poetry_dependencies[name]:
-            poetry_dependencies[name] = conda_dict['version']
+        if name in poetry_dependencies and "git" in poetry_dependencies[name]:
+            poetry_dependencies[name] = conda_dict["version"]
 
     # 2. Now do the conversion
     for name, constraint in poetry_dependencies.items():
         if isinstance(constraint, str):
             dependencies[name] = convert_version(constraint)
         elif isinstance(constraint, dict):
+            if constraint.get("optional", False):
+                continue
             if "git" in constraint:
                 git = constraint["git"]
                 tag = constraint["tag"]
                 pip_dependencies[f"git+{git}@{tag}#egg={name}"] = None
-            elif 'version' in constraint:
-                dependencies[name] = convert_version(constraint['version'])
+            elif "version" in constraint:
+                dependencies[name] = convert_version(constraint["version"])
             else:
                 raise ValueError(
                     f"This converter only supports normal dependencies and "
@@ -249,15 +265,18 @@ def main():
         help="environment.yaml output file.",
     )
     parser.add_argument(
-        "--dev",
-        action="store_true",
-        help="include dev dependencies",
+        "--dev", action="store_true", help="include dev dependencies",
+    )
+    parser.add_argument(
+        "--extras", "-E", action="append", help="Add extra requirements",
     )
     parser.add_argument(
         "--version", action="version", version=f"%(prog)s (version {__version__})"
     )
     args = parser.parse_args()
-    args.environment.write(convert(args.pyproject, include_dev=args.dev))
+    args.environment.write(
+        convert(args.pyproject, include_dev=args.dev, extras=args.extras)
+    )
 
 
 if __name__ == "__main__":
