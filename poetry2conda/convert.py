@@ -1,6 +1,6 @@
 import argparse
 from datetime import datetime
-from typing import Mapping, TextIO, Tuple
+from typing import Mapping, TextIO, Tuple, Iterable, Optional
 
 import semantic_version
 import toml
@@ -8,7 +8,9 @@ import toml
 from poetry2conda import __version__
 
 
-def convert(file: TextIO, include_dev=False, extras=None) -> str:
+def convert(
+    file: TextIO, include_dev: bool = False, extras: Optional[Iterable[str]] = None
+) -> str:
     """ Convert a pyproject.toml file to a conda environment YAML
 
     This is the main function of poetry2conda, where all parsing, converting,
@@ -19,7 +21,10 @@ def convert(file: TextIO, include_dev=False, extras=None) -> str:
     file
         A file-like object containing a pyproject.toml file.
     include_dev
-        Whether to include the dev dependencies in the resulting environment
+        Whether to include the dev dependencies in the resulting environment.
+    extras
+        The name of extras to include in the output.  Can be None or empty
+        for no extras.
 
     Returns
     -------
