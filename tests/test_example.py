@@ -23,6 +23,7 @@ qux = "~1.4.5"              # Example of a tilde requirement whose major version
 quux = "2.34.5"             # Example of an exact version
 quuz = ">=3.2"              # Example of an inequality
 xyzzy = ">=2.1,<4.2"        # Example of two inequalities
+spinach = "^19.10b0"        # Previously non-working version spec
 grault = { git = "https://github.com/organization/repo.git", tag = "v2.7.4"}   # Example of a git package
 pizza = {extras = ["pepperoni"], version = "^1.2.3"}  # Example of a package with extra requirements
 chameleon = { git = "https://github.com/org/repo.git", tag = "v2.3" }
@@ -49,13 +50,14 @@ build-backend = "poetry.masonry.api"
 SAMPLE_YAML = """\
 name: bibimbap-env
 dependencies:
-  - python>=3.7.0,<4.0.0
+  - python>=3.7,<4.0
   - foo>=0.2.3,<0.3.0
   - conda-forge::bar>=1.2.3,<2.0.0
   - thud>=1.4.5,<1.5.0
   - quux==2.34.5
-  - quuz>=3.2.0
-  - xyzzy>=2.1.0,<4.2.0
+  - quuz>=3.2
+  - xyzzy>=2.1,<4.2
+  - spinach>=19.10b0,<20.0
   - pizza>=1.2.3,<2.0.0    # Note that extra requirements are not supported on conda :-(
   - animals::lizard>=2.5.4,<3.0.0
   - pip
@@ -67,16 +69,17 @@ dependencies:
 SAMPLE_YAML_DEV = """\
 name: bibimbap-env
 dependencies:
-  - python>=3.7.0,<4.0.0
+  - python>=3.7,<4.0
   - foo>=0.2.3,<0.3.0
   - conda-forge::bar>=1.2.3,<2.0.0
   - thud>=1.4.5,<1.5.0
   - quux==2.34.5
-  - quuz>=3.2.0
-  - xyzzy>=2.1.0,<4.2.0
+  - quuz>=3.2
+  - xyzzy>=2.1,<4.2
+  - spinach>=19.10b0,<20.0
   - pizza>=1.2.3,<2.0.0    # Note that extra requirements are not supported on conda :-(
   - animals::lizard>=2.5.4,<3.0.0
-  - fork>=1.2.0,<2.0.0
+  - fork>=1.2,<2.0
   - pip
   - pip:
     - baz>=0.4.5,<0.5.0
