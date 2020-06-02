@@ -1,4 +1,7 @@
 import argparse
+import contextlib
+import pathlib
+import sys
 from datetime import datetime
 from typing import Mapping, TextIO, Tuple, Iterable, Optional
 
@@ -247,6 +250,20 @@ dependencies:
     return conda_yaml
 
 
+def write_file(filename: str, contents: str) -> None:
+    context = contextlib.ExitStack()
+    if filename == '-':
+        f = sys.stdout
+    else:
+        environment_yaml = pathlib.Path(filename)
+        if not environment_yaml.exists():
+            environment_yaml.parent.mkdir(parents=True, exist_ok=True)
+        f = context.enter_context(environment_yaml.open('w'))
+
+    with context:
+        f.write(contents)
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Convert a poetry-based pyproject.toml "
@@ -261,7 +278,7 @@ def main():
     parser.add_argument(
         "environment",
         metavar="YAML",
-        type=argparse.FileType("w"),
+        type=str,
         help="environment.yaml output file.",
     )
     parser.add_argument(
@@ -274,9 +291,8 @@ def main():
         "--version", action="version", version=f"%(prog)s (version {__version__})"
     )
     args = parser.parse_args()
-    args.environment.write(
-        convert(args.pyproject, include_dev=args.dev, extras=args.extras)
-    )
+    converted_obj = convert(args.pyproject, include_dev=args.dev, extras=args.extras)
+    write_file(args.environment, converted_obj)
 
 
 if __name__ == "__main__":
