@@ -38,6 +38,12 @@ black = "^19.10b0"
 [tool.poetry.scripts]
 poetry2conda = "poetry2conda.convert:main"
 
+[tool.poetry2conda]
+name = 'p2c-env'
+
+[tool.poetry2conda.dependencies]
+poetry-semver = { channel = "pip" }
+
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
