@@ -1,0 +1,52 @@
+name: unit tests
+on: [push]
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python: [3.6, 3.7, 3.8]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Setup Python ${{ matrix.python }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install
+        env:
+          # Python-related environment variables
+          PYTHONUNBUFFERED: "1"
+          # prevents python creating .pyc files
+          PYTHONDONTWRITEBYTECODE: "1"
+          # pip-related environment variables
+          PIP_NO_CACHE_DIR: "off"
+          PIP_DISABLE_PIP_VERSION_CHECK: "on"
+          PIP_DEFAULT_TIMEOUT: "100"
+          PIP_VERSION: "20.0.2"
+          # poetry-related environment variables
+          # https://python-poetry.org/docs/configuration/#using-environment-variables
+          POETRY_VERSION: "1.0.5"
+          # make poetry install to this location
+          POETRY_HOME: "/opt/poetry"
+          # make poetry create the virtual environment in the project's root
+          # it gets named `.venv`
+          POETRY_VIRTUALENVS_IN_PROJECT: "true"
+          # do not ask any interactive question
+          POETRY_NO_INTERACTION: "1"
+          # paths-related environment variables
+          # this is where our requirements + virtual environment will live
+          PYSETUP_PATH: "/opt/pysetup"
+          VENV_PATH: "/opt/pysetup/.venv"
+        run: |
+          curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+          export PATH="$POETRY_HOME/bin:$VENV_PATH/bin:$PATH"
+          poetry install
+
+      - name: Unit tests
+        run: |
+          source .venv/bin/activate
+          pytest -v
