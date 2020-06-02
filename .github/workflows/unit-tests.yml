@@ -1,11 +1,11 @@
 name: unit tests
 on: [push]
 jobs:
+  runs-on: ${{ matrix.os }}
   strategy:
     matrix:
       os: [ubuntu-latest, windows-latest, macos-latest]
-      python_version: ["3.6", "3.7", "3.8"]
-  runs-on: ${{ matrix.os }}
+#      python_version: ["3.6", "3.7", "3.8"]
   steps:
     - name: Checkout
       uses: actions/checkout@v1
@@ -13,7 +13,8 @@ jobs:
     - name: Setup Python ${{ matrix.python_version }}
       uses: actions/setup-python@v1
       with:
-        python_version: ${{ matrix.python_version }}
+        python_version: 3.6
+#        python_version: ${{ matrix.python_version }}
 
     - name: Install
       env:
