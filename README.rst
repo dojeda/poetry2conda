@@ -6,6 +6,8 @@ poetry2conda
     :target: https://pypi.org/project/poetry2conda/
 .. image:: https://img.shields.io/pypi/l/poetry2conda.svg
     :target: https://pypi.org/project/poetry2conda/
+.. image:: https://github.com/dojeda/poetry2conda/workflows/unit%20tests/badge.svg?branch=master
+    :target: https://github.com/dojeda/poetry2conda/actions
 
 A script to convert a Python project declared on a pyproject.toml to a conda
 environment.
