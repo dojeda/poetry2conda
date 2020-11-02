@@ -49,11 +49,14 @@ def convert(
             if isinstance(dep, dict):
                 dep["optional"] = False
     conda_constraints = poetry2conda_config.get("dependencies", {})
+    pip_indices = convert_indices(poetry_config.get("source", []))
 
     dependencies, pip_dependencies = collect_dependencies(
         poetry_dependencies, conda_constraints
     )
-    conda_yaml = to_yaml_string(env_name, dependencies, pip_dependencies)
+    conda_yaml = to_yaml_string(
+        env_name, dependencies, pip_dependencies, pip_indices
+    )
     return conda_yaml
 
 
@@ -197,8 +200,40 @@ def collect_dependencies(
     return dependencies, pip_dependencies
 
 
+def convert_indices(indices: Optional[Iterable[Mapping]]) -> Iterable[str]:
+    """ Converts private pip indices to a list of pip index flags.
+
+    Prepends `--index-url` to the repo url if `default = true`,
+    `--extra-index-url` otherwhise.
+
+    Parameters
+    ----------
+    indices
+        items specified in tool.poetry.source
+
+    Returns
+    -------
+    a list of string with `--index-url` or `--extra-index-url`.
+
+    """
+    converted = []
+    for index in indices:
+        switch = "--index-url" if index.get("default") else "--extra-index-url"
+        try:
+            converted.append(f"{switch} {index['url']}")
+        except KeyError:
+            raise ValueError(
+                f"tool.poetry.source with name {index['name']} "
+                f"doesn't have a url."
+            )
+    return converted
+
+
 def to_yaml_string(
-    env_name: str, dependencies: Mapping, pip_dependencies: Mapping
+    env_name: str,
+    dependencies: Mapping,
+    pip_dependencies: Mapping,
+    pip_indices: Iterable
 ) -> str:
     """ Converts dependencies to a string in YAML format.
 
@@ -215,6 +250,8 @@ def to_yaml_string(
         Regular conda dependencies.
     pip_dependencies
         Pure pip dependencies.
+    pip_indices
+        optional private pip indices.
 
     Returns
     -------
@@ -227,6 +264,8 @@ def to_yaml_string(
         deps_str.append(f"  - {name}{version}")
     if pip_dependencies:
         deps_str.append(f"  - pip:")
+    for index in pip_indices:
+        deps_str.append(f"    - {index}")
     for name, version in pip_dependencies.items():
         version = version or ""
         deps_str.append(f"    - {name}{version}")
