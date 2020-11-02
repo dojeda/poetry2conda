@@ -14,6 +14,15 @@ description = "Delicious korean food"
 authors = ["David Ojeda <david.ojeda@gmail.com>"]
 license = "MIT"
 
+[[tool.poetry.source]]
+name = "stable"
+url = "https://private.repo.my/my/stable/+simple/"
+default = true
+
+[[tool.poetry.source]]
+name = "edge"
+url = "https://private.repo.my/my/edge/+simple/"
+
 [tool.poetry.dependencies]
 python = "^3.7"
 foo = "^0.2.3"              # Example of a caret requirement whose major version is zero
@@ -66,6 +75,8 @@ dependencies:
   - animals::lizard>=2.5.4,<3.0.0
   - pip
   - pip:
+    - --index-url https://private.repo.my/my/stable/+simple/
+    - --extra-index-url https://private.repo.my/my/edge/+simple/
     - baz>=0.4.5,<0.5.0
     - git+https://github.com/organization/repo.git@v2.7.4#egg=grault
 """
@@ -86,6 +97,8 @@ dependencies:
   - pudding>=1.0,<2.0
   - pip
   - pip:
+    - --index-url https://private.repo.my/my/stable/+simple/
+    - --extra-index-url https://private.repo.my/my/edge/+simple/
     - baz>=0.4.5,<0.5.0
     - git+https://github.com/organization/repo.git@v2.7.4#egg=grault
 """
@@ -106,6 +119,8 @@ dependencies:
   - fork>=1.2,<2.0
   - pip
   - pip:
+    - --index-url https://private.repo.my/my/stable/+simple/
+    - --extra-index-url https://private.repo.my/my/edge/+simple/
     - baz>=0.4.5,<0.5.0
     - git+https://github.com/organization/repo.git@v2.7.4#egg=grault
 """
