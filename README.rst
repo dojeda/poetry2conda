@@ -103,6 +103,29 @@ After conversion, the yaml file will look like:
       - conda-forge::foo>=1.2.3,<2.0.0
       # ...
 
+You can also specify channels for the entire environment specification:
+
+.. code-block:: toml
+
+    [tool.poetry.dependencies]
+    foo = "^1.2.3"
+    # ...
+
+    [tool.poetry2conda]
+    name = "my-env-with-default-channels"
+    channels = [ "conda-forge" ]
+
+Which will produce:
+
+.. code-block:: yaml
+
+    name: my-env-with-default-channels
+    channels:
+      - conda-forge
+    dependencies:
+      - foo>=1.2.3,<2.0.0
+      # ...
+
 Sometimes, a package on PyPI does not have the same name on conda
 (why? why not? confusion!). For example, ``tables`` and ``pytables``,
 ``docker`` and ``docker-py``. To change the name when converting to a conda
