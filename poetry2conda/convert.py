@@ -158,8 +158,10 @@ def collect_dependencies(
                 continue
             if "git" in constraint:
                 git = constraint["git"]
-                tag = constraint["tag"]
-                pip_dependencies[f"git+{git}@{tag}#egg={name}"] = None
+                tag = constraint.get("tag")                                                                                                                  
+                rev = constraint.get("rev")
+                tag_or_rev = tag or rev
+                pip_dependencies[f"git+{git}@{tag_or_rev}#egg={name}"] = None
             elif "version" in constraint:
                 dependencies[name] = convert_version(constraint["version"])
             else:
