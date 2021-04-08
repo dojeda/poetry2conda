@@ -24,7 +24,8 @@ quux = "2.34.5"             # Example of an exact version
 quuz = ">=3.2"              # Example of an inequality
 xyzzy = ">=2.1,<4.2"        # Example of two inequalities
 spinach = "^19.10b0"        # Previously non-working version spec
-grault = { git = "https://github.com/organization/repo.git", tag = "v2.7.4"}   # Example of a git package
+grault = { git = "https://github.com/organization/repo.git", tag = "v2.7.4"}   # Example of a git package with a tag
+cake = { git = "https://github.com/organization/repo.git", rev = "my_branch"}   # Example of a git package with a commit/branch
 pizza = {extras = ["pepperoni"], version = "^1.2.3"}  # Example of a package with extra requirements
 chameleon = { git = "https://github.com/org/repo.git", tag = "v2.3" }
 pudding = { version = "^1.0", optional = true }
@@ -68,6 +69,7 @@ dependencies:
   - pip:
     - baz>=0.4.5,<0.5.0
     - git+https://github.com/organization/repo.git@v2.7.4#egg=grault
+    - git+https://github.com/organization/repo.git@my_branch#egg=cake
 """
 
 SAMPLE_YAML_EXTRA = """\
@@ -88,6 +90,7 @@ dependencies:
   - pip:
     - baz>=0.4.5,<0.5.0
     - git+https://github.com/organization/repo.git@v2.7.4#egg=grault
+    - git+https://github.com/organization/repo.git@my_branch#egg=cake
 """
 
 SAMPLE_YAML_DEV = """\
@@ -108,6 +111,7 @@ dependencies:
   - pip:
     - baz>=0.4.5,<0.5.0
     - git+https://github.com/organization/repo.git@v2.7.4#egg=grault
+    - git+https://github.com/organization/repo.git@my_branch#egg=cake
 """
 
 
