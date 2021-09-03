@@ -1,6 +1,7 @@
 import argparse
 import contextlib
 import pathlib
+import re
 import sys
 from datetime import datetime
 from typing import Mapping, TextIO, Tuple, Iterable, Optional
@@ -80,7 +81,9 @@ def convert_version(spec_str: str) -> str:
     elif isinstance(spec, semver.VersionRange):
         converted = str(spec)
     elif isinstance(spec, semver.VersionUnion):
-        raise ValueError("Complex version constraints are not supported at the moment.")
+        converted = re.sub(r"\s+\|\|\s+", "|", str(spec))
+    else:
+        raise ValueError(f"Unknown constraint type: {type(spec)}")
     return converted
 
 

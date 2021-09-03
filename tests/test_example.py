@@ -1,5 +1,6 @@
 import io
 
+import pytest
 import yaml
 
 from poetry2conda.convert import main
@@ -23,6 +24,7 @@ qux = "~1.4.5"              # Example of a tilde requirement whose major version
 quux = "2.34.5"             # Example of an exact version
 quuz = ">=3.2"              # Example of an inequality
 xyzzy = ">=2.1,<4.2"        # Example of two inequalities
+plugh = "!=3.0,!=5.3"       # Example of version union
 spinach = "^19.10b0"        # Previously non-working version spec
 grault = { git = "https://github.com/organization/repo.git", tag = "v2.7.4"}   # Example of a git package
 pizza = {extras = ["pepperoni"], version = "^1.2.3"}  # Example of a package with extra requirements
@@ -61,6 +63,7 @@ dependencies:
   - quux==2.34.5
   - quuz>=3.2
   - xyzzy>=2.1,<4.2
+  - plugh<3.0|>3.0,<5.3|>5.3
   - spinach>=19.10b0,<20.0
   - pizza>=1.2.3,<2.0.0    # Note that extra requirements are not supported on conda :-(
   - animals::lizard>=2.5.4,<3.0.0
@@ -80,6 +83,7 @@ dependencies:
   - quux==2.34.5
   - quuz>=3.2
   - xyzzy>=2.1,<4.2
+  - plugh<3.0|>3.0,<5.3|>5.3
   - spinach>=19.10b0,<20.0
   - pizza>=1.2.3,<2.0.0    # Note that extra requirements are not supported on conda :-(
   - animals::lizard>=2.5.4,<3.0.0
@@ -100,6 +104,7 @@ dependencies:
   - quux==2.34.5
   - quuz>=3.2
   - xyzzy>=2.1,<4.2
+  - plugh<3.0|>3.0,<5.3|>5.3
   - spinach>=19.10b0,<20.0
   - pizza>=1.2.3,<2.0.0    # Note that extra requirements are not supported on conda :-(
   - animals::lizard>=2.5.4,<3.0.0
