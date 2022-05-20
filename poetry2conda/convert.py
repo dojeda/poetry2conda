@@ -12,7 +12,7 @@ from poetry2conda import __version__
 
 
 def convert(
-    file: TextIO, include_dev: bool = False, extras: Optional[Iterable[str]] = None
+    file: TextIO, include_dev: bool = False, extras: Optional[Iterable[str]] = None, is_pip_default: bool = False 
 ) -> str:
     """ Convert a pyproject.toml file to a conda environment YAML
 
@@ -51,7 +51,7 @@ def convert(
     conda_constraints = poetry2conda_config.get("dependencies", {})
 
     dependencies, pip_dependencies = collect_dependencies(
-        poetry_dependencies, conda_constraints
+        poetry_dependencies, conda_constraints, is_pip_default
     )
     conda_yaml = to_yaml_string(env_name, dependencies, pip_dependencies)
     return conda_yaml
@@ -124,7 +124,7 @@ def parse_pyproject_toml(file: TextIO) -> Tuple[Mapping, Mapping]:
 
 
 def collect_dependencies(
-    poetry_dependencies: Mapping, conda_constraints: Mapping
+    poetry_dependencies: Mapping, conda_constraints: Mapping, is_pip_default: bool = False
 ) -> Tuple[Mapping, Mapping]:
     """ Organize and apply conda constraints to dependencies
 
@@ -160,6 +160,7 @@ def collect_dependencies(
                 git = constraint["git"]
                 tag = constraint["tag"]
                 pip_dependencies[f"git+{git}@{tag}#egg={name}"] = None
+                continue
             elif "version" in constraint:
                 dependencies[name] = convert_version(constraint["version"])
             else:
@@ -180,21 +181,44 @@ def collect_dependencies(
             conda_dict = conda_constraints[name]
             if "name" in conda_dict:
                 new_name = conda_dict["name"]
+                # never put this into pip section as the new name is for conda only
                 dependencies[new_name] = dependencies.pop(name)
                 name = new_name
             # do channel last, because it may move from dependencies to pip_dependencies
             if "channel" in conda_dict:
                 channel = conda_dict["channel"]
                 if channel == "pip":
-                    pip_dependencies[name] = dependencies.pop(name)
+                    if "extras" in constraint:
+                        new_name = parse_extras_to_pip(name, constraint)
+                        pip_dependencies[new_name] = dependencies.pop(name)
+                    else:
+                        pip_dependencies[name] = dependencies.pop(name)
                 else:
                     new_name = f"{channel}::{name}"
                     dependencies[new_name] = dependencies.pop(name)
-
+        else:
+        # this is a custom part, which puts all conda packages to pip section except for python.
+            if is_pip_default and name.lower() != "python":
+                if "extras" in constraint:
+                    new_name = parse_extras_to_pip(name, constraint)
+                    pip_dependencies[new_name] = dependencies.pop(name)
+                else:
+                    pip_dependencies[name] = dependencies.pop(name)
+            else:
+                dependencies[name] = dependencies.pop(name)
     if pip_dependencies:
         dependencies["pip"] = None
 
     return dependencies, pip_dependencies
+
+
+def parse_extras_to_pip(name: str, constraint: dict) -> str:
+    "Parse extras for including them for pip libraries"
+    extras = "" 
+    for i in constraint["extras"]:
+        extras += f"{i}, "
+    extras = extras.rstrip(", ")
+    return f"{name}[{extras}]"
 
 
 def to_yaml_string(
@@ -285,13 +309,16 @@ def main():
         "--dev", action="store_true", help="include dev dependencies",
     )
     parser.add_argument(
+        "--pip_default", action="store_true", help="favor pip as the default channel against conda",
+    )
+    parser.add_argument(
         "--extras", "-E", action="append", help="Add extra requirements",
     )
     parser.add_argument(
         "--version", action="version", version=f"%(prog)s (version {__version__})"
     )
     args = parser.parse_args()
-    converted_obj = convert(args.pyproject, include_dev=args.dev, extras=args.extras)
+    converted_obj = convert(args.pyproject, include_dev=args.dev, extras=args.extras, is_pip_default=args.pip_default)
     write_file(args.environment, converted_obj)
 
 
