@@ -1,0 +1,8 @@
+- id: poetry2conda
+  name: poetry2conda
+  description: Convert pyproject.toml to environment.yml
+  language: python
+  entry: poetry2conda
+  files: ^pyproject.toml$
+  args: [pyproject.toml, environment.yml]
+  pass_filenames: false
