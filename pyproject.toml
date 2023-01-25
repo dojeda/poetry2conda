@@ -2,7 +2,7 @@
 name = "poetry2conda"
 # Note the version managed by bump2version.
 # Do not change it manually here, use bump2version to change it.
-version = "0.3.0"
+version = "0.4.2"
 description = "Convert pyproject.toml to environment.yaml"
 authors = ["David Ojeda <david.ojeda@gmail.com>"]
 license = "MIT"
