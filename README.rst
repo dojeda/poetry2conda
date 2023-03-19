@@ -223,6 +223,41 @@ Which will be translated to:
     dependencies:
       - conda-forge::bob>=2.3.0,<3.0.0
 
+In some cases package only exists on conda. You can use `condaonly` for this case:
+
+.. code-block:: toml
+
+    [tool.poetry2conda]
+    name = "condaonly-example"
+
+    [tool.poetry.condaonly]
+    pytorch-cuda = { channel = "pytorch", version = "11.7" }
+
+Which will be translated to:
+
+.. code-block:: yaml
+
+    name: condaonly-example
+    dependencies:
+      - pytorch::pytorch-cuda==11.7
+
+Also, you may need to specify some additional channels:
+
+.. code-block:: toml
+
+    [tool.poetry2conda]
+    name = "channels-example"
+    channels = ["pytorch", "nvidia"]
+
+Which results in:
+
+.. code-block:: yaml
+
+    name: channels-example
+    channels:
+      - pytorch
+      - nvidia
+
 
 Contribute
 ----------
