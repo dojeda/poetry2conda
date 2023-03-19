@@ -38,7 +38,7 @@ fork = "^1.2"
 
 [tool.poetry2conda]
 name = "bibimbap-env"
-channels = ["pytorch"]
+channels = ["pytorch", "nvidia"]
 
 [tool.poetry2conda.dependencies]
 bar = { channel = "conda-forge" }            # Example of a package on conda-forge
@@ -122,6 +122,7 @@ SAMPLE_YAML = """\
 name: bibimbap-env
 channels:
   - pytorch
+  - nvidia
 dependencies:
   - python>=3.7,<4.0
   - foo>=0.2.3,<0.3.0
@@ -145,6 +146,7 @@ SAMPLE_YAML_EXTRA = """\
 name: bibimbap-env
 channels:
   - pytorch
+  - nvidia
 dependencies:
   - python>=3.7,<4.0
   - foo>=0.2.3,<0.3.0
@@ -169,6 +171,7 @@ SAMPLE_YAML_DEV = """\
 name: bibimbap-env
 channels:
   - pytorch
+  - nvidia
 dependencies:
   - python>=3.7,<4.0
   - foo>=0.2.3,<0.3.0
