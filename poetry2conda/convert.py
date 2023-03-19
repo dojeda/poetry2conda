@@ -262,8 +262,7 @@ def to_yaml_string(
     channels_str = ""
     if channels is not None and len(channels) > 0:
         channels_str += """
-channels:
-"""
+channels:"""
         for channel in channels:
             channels_str += f"\n  - {channel}"
     conda_yaml = f"""\
